@@ -5,7 +5,6 @@ import delivery.delivery.DeliveryMethod;
 import java.util.ArrayList;
 import java.util.List;
 
-// Заказ: клиент, адрес, позиции, способ доставки, курьер и статус
 public class Order {
 
     private final int id;
@@ -29,7 +28,6 @@ public class Order {
         this.status = OrderStatus.CREATED;
     }
 
-    // Добавить позицию можно только в новый заказ
     public void addItem(OrderItem item) {
         if (item == null) {
             throw new IllegalArgumentException("Позиция заказа не может быть пустой");
@@ -40,7 +38,6 @@ public class Order {
         items.add(item);
     }
 
-    // Выбрать способ доставки можно только до подтверждения заказа
     public void setDeliveryMethod(DeliveryMethod deliveryMethod) {
         if (deliveryMethod == null) {
             throw new IllegalArgumentException("Способ доставки не может быть пустым");
@@ -51,7 +48,6 @@ public class Order {
         this.deliveryMethod = deliveryMethod;
     }
 
-    // Курьера назначают подтверждённому заказу, если способ доставки этого требует
     public void assignCourier(Courier courier) {
         if (courier == null) {
             throw new IllegalArgumentException("Курьер не может быть пустым");
@@ -69,7 +65,6 @@ public class Order {
         this.courier = courier;
     }
 
-    // Изменить статус с проверкой всех правил
     public void changeStatus(OrderStatus next) {
         if (next == null) {
             throw new IllegalArgumentException("Статус не может быть пустым");
@@ -97,14 +92,12 @@ public class Order {
         if (next == OrderStatus.READY_FOR_PICKUP && deliveryMethod.requiresCourier()) {
             throw new IllegalStateException("Статус «Готов к выдаче» бывает только у самовывоза");
         }
-        // Заказ завершён, курьер снова свободен
         if ((next == OrderStatus.DELIVERED || next == OrderStatus.CANCELLED) && courier != null) {
             courier.release();
         }
         status = next;
     }
 
-    // Сумма всех позиций
     public double getItemsTotal() {
         double total = 0;
         for (OrderItem item : items) {
@@ -137,7 +130,6 @@ public class Order {
         return address;
     }
 
-    // Возвращаем копию, чтобы товары нельзя было добавить в обход addItem
     public List<OrderItem> getItems() {
         return new ArrayList<>(items);
     }
