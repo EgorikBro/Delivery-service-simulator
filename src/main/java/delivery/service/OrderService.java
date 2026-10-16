@@ -54,6 +54,12 @@ public class OrderService {
         order.assignCourier(courier);
     }
 
+    public void changeCourier(int orderId, int courierId) {
+        Order order = findOrder(orderId);
+        Courier courier = courierService.findCourier(courierId);
+        order.changeCourier(courier);
+    }
+
     public void changeStatus(int orderId, OrderStatus status) {
         findOrder(orderId).changeStatus(status);
     }
