@@ -12,7 +12,6 @@ import delivery.ui.OrderPrinter;
 
 import java.util.List;
 
-// Точка входа: создаёт все объекты программы и запускает меню
 public class Main {
 
     public static void main(String[] args) {
