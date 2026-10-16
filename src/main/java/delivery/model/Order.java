@@ -65,6 +65,25 @@ public class Order {
         this.courier = courier;
     }
 
+    public void changeCourier(Courier newCourier) {
+        if (newCourier == null) {
+            throw new IllegalArgumentException("Курьер не может быть пустым");
+        }
+        if (courier == null) {
+            throw new IllegalStateException("Курьер ещё не назначен");
+        }
+        if (status != OrderStatus.CONFIRMED) {
+            throw new IllegalStateException("Сменить курьера можно только до передачи заказа в доставку");
+        }
+        if (newCourier == courier) {
+            throw new IllegalStateException("Этот курьер уже назначен на заказ");
+        }
+        // Сначала занимаем нового: если он занят, старый курьер останется на заказе
+        newCourier.occupy();
+        courier.release();
+        courier = newCourier;
+    }
+
     public void changeStatus(OrderStatus next) {
         if (next == null) {
             throw new IllegalArgumentException("Статус не может быть пустым");

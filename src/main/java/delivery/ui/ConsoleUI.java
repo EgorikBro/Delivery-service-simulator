@@ -125,6 +125,16 @@ public class ConsoleUI {
             System.out.println("Для способа «" + method.getName() + "» курьер не нужен");
             return;
         }
+
+        Courier currentCourier = order.getCourier();
+        if (currentCourier != null) {
+            String answer = input.readText("Курьер уже назначен: " + currentCourier.getName()
+                    + ". Сменить курьера? (да/нет): ");
+            if (!answer.equalsIgnoreCase("да")) {
+                return;
+            }
+        }
+
         List<Courier> couriers = courierService.getAvailableCouriers();
         System.out.println("Свободные курьеры:");
         printer.printCouriers(couriers);
@@ -132,8 +142,13 @@ public class ConsoleUI {
             return;
         }
         int courierId = input.readInt("Номер курьера: ");
-        orderService.assignCourier(order.getId(), courierId);
-        System.out.println("Курьер назначен");
+        if (currentCourier == null) {
+            orderService.assignCourier(order.getId(), courierId);
+            System.out.println("Курьер назначен");
+        } else {
+            orderService.changeCourier(order.getId(), courierId);
+            System.out.println("Курьер заменён");
+        }
         printer.printOrder(order);
     }
 
